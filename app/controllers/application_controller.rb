@@ -3,21 +3,27 @@ class ApplicationController < ActionController::API
     render json: { error: 'Not Found' }, status: :not_found
   end
 
+  def unauthorized
+    render json: { error: 'Unauthorized' }, status: :unauthorized
+  end
+
   def home
     render json: { message: 'Tuitter API', version: '0.1.0' }
   end
 
   def authorize_request
-    header = request.headers['Authorization']
-    header = header.split(' ').last if header
+    token = request.headers['Authorization']&.split(' ')&.last
 
-    begin
-      @decoded = JsonWebToken.decode(header)
-      @current_user = User.find(@decoded[:user_id])
-    rescue ActiveRecord::RecordNotFound => e
-      render json: { errors: e.message }, status: :unauthorized
-    rescue JWT::DecodeError => e
-      render json: { errors: e.message }, status: :unauthorized
-    end
+    return unauthorized unless token
+
+    decoded_token = JsonWebToken.decode(token)
+    jti = decoded_token[:jti]
+
+    return unauthorized if BlacklistedToken.exists?(jti: jti)
+
+    @current_user = User.find(decoded_token[:user_id])
+
+  rescue ActiveRecord::RecordNotFound, JWT::DecodeError => e
+    render json: { errors: e.message }, status: :unauthorized
   end
 end
