@@ -3,6 +3,10 @@ class ApplicationController < ActionController::API
     render json: { error: 'Not Found' }, status: :not_found
   end
 
+  def home
+    render json: { message: 'Tuitter API', version: '0.1.0' }
+  end
+
   def authorize_request
     header = request.headers['Authorization']
     header = header.split(' ').last if header
