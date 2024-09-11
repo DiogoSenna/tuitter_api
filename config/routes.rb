@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   get '/*a', to: 'application#not_found'
 
   post '/auth/login', to: 'authentication#login'
+  delete '/auth/logout', to: 'authentication#logout'
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

@@ -1,4 +1,6 @@
 class AuthenticationController < ApplicationController
+  before_action :authorize_request, only: :logout
+
   # POST /auth/login
   def login
     @user = User.where(username: params[:username])
@@ -15,6 +17,14 @@ class AuthenticationController < ApplicationController
     else
       render json: { error: 'Unauthorized' }, status: :unauthorized
     end
+  end
+
+  # DELETE /auth/logout
+  def logout
+    jti = @decoded_token[:jti]
+    exp = Time.at(@decoded_token[:exp]).to_datetime
+
+    BlacklistedToken.create!(jti: jti, exp: exp)
   end
 
   private

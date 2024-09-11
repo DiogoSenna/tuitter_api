@@ -16,12 +16,11 @@ class ApplicationController < ActionController::API
 
     return unauthorized unless token
 
-    decoded_token = JsonWebToken.decode(token)
-    jti = decoded_token[:jti]
+    @decoded_token = JsonWebToken.decode(token)
 
-    return unauthorized if BlacklistedToken.exists?(jti: jti)
+    return unauthorized if BlacklistedToken.exists?(jti: @decoded_token[:jti])
 
-    @current_user = User.find(decoded_token[:user_id])
+    @current_user = User.find(@decoded_token[:user_id])
 
   rescue ActiveRecord::RecordNotFound, JWT::DecodeError => e
     render json: { errors: e.message }, status: :unauthorized
