@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
   root "application#home"
-  get '/*a', to: 'application#not_found'
 
   post '/auth/login', to: 'authentication#login'
   delete '/auth/logout', to: 'authentication#logout'
