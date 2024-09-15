@@ -2,9 +2,9 @@ Rails.application.routes.draw do
   root "application#home"
 
   post '/auth/login', to: 'authentication#login'
-  delete '/auth/logout', to: 'authentication#logout'
+  post '/auth/logout', to: 'authentication#logout'
 
-  resources :users, param: :username do
+  resources :users, param: :username, constraints: { username: /.+/ } do
     resource :profile, only: %i[show create update]
   end
 
