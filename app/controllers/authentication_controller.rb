@@ -1,7 +1,6 @@
 class AuthenticationController < ApplicationController
   before_action :authorize_request, only: :logout
 
-  # POST /auth/login
   def login
     @user = User.where(username: params[:username])
                 .or(User.where(email: params[:email]))
@@ -12,14 +11,13 @@ class AuthenticationController < ApplicationController
 
       render json: {
         token: token,
-        username: @user.username
-      }, status: :ok
+        user: @user.as_json(except: [:id, :password_digest]),
+      }
     else
       render json: { error: 'Unauthorized' }, status: :unauthorized
     end
   end
 
-  # DELETE /auth/logout
   def logout
     jti = @decoded_token[:jti]
     exp = Time.at(@decoded_token[:exp]).to_datetime
