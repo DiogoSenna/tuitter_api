@@ -1,5 +1,5 @@
 class AuthenticationController < ApplicationController
-  before_action :authorize_request, only: :logout
+  before_action :authorize_request, only: %i[logout me change_password]
 
   def login
     @user = User.where(username: params[:username])
@@ -25,9 +25,24 @@ class AuthenticationController < ApplicationController
     BlacklistedToken.create!(jti: jti, exp: exp)
   end
 
+  def me
+    @current_user
+  end
+
+  def change_password
+    return head :no_content if @current_user.update(password_params)
+
+    render json: { errors: @current_user.errors.full_messages }, status: :unprocessable_entity
+  end
+
   private
 
   def login_params
     params.permit(:username, :email, :password)
+  end
+
+  def password_params
+    params.permit(:password, :password_confirmation, :password_challenge)
+          .with_defaults(password_challenge: '')
   end
 end

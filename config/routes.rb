@@ -1,16 +1,14 @@
 Rails.application.routes.draw do
   root "application#home"
 
+  get '/auth/me', to: 'authentication#me'
   post '/auth/login', to: 'authentication#login'
   post '/auth/logout', to: 'authentication#logout'
+  patch '/auth/change-password', to: 'authentication#change_password'
 
   resources :users, param: :username, constraints: { username: /.+/ } do
     resource :profile, only: %i[show create update]
   end
 
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
 end
