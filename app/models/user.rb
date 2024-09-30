@@ -4,7 +4,8 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :password,
             length: { minimum: 8, maximum: 128 },
-            password: true
+            password: true,
+            allow_nil: true, on: :update
 
   has_one :profile
 end
