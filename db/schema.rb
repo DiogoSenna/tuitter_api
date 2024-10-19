@@ -26,8 +26,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_11_024223) do
     t.string "first_name", null: false
     t.string "last_name", null: false
     t.date "birth_date", null: false
-    t.string "city"
-    t.string "country"
+    t.string "country", null: false
+    t.string "state", null: false
+    t.string "city", null: false
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -35,9 +36,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_11_024223) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "username"
-    t.string "email"
-    t.string "password_digest"
+    t.string "username", null: false
+    t.string "email", null: false
+    t.string "password_digest", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
