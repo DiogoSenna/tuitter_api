@@ -1,13 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe 'Authentication', type: :request do
-  let(:user) { create(:user, password: 'password') }
+  PASSWORD = Faker::Internet.password(min_length: 8, mix_case: true, special_characters: true)
+  let(:user) { create(:user, password: PASSWORD) }
 
   describe 'POST /auth/login' do
     it 'authenticates an user' do
       post '/auth/login', params: {
         username: user.username,
-        password: 'password'
+        password: PASSWORD
       }
 
       expect(response).to have_http_status(:ok)
