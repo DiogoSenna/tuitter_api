@@ -10,7 +10,7 @@ RSpec.describe "Profiles", type: :request do
 
   describe "GET /users/:user_username/profile" do
     it "returns the profile" do
-      create(:profile, user: user)
+      create(:profile, country: 'BR', user: user)
 
       get user_profile_path(user.username), headers: headers, as: :json
 
@@ -23,13 +23,7 @@ RSpec.describe "Profiles", type: :request do
     it "creates a new profile" do
       expect {
         post user_profile_path(user.username), headers: headers, params: {
-          profile: {
-            first_name: Faker::Name.first_name,
-            last_name: Faker::Name.last_name,
-            birth_date: Faker::Date.birthday(min_age: 18, max_age: 65),
-            city: Faker::Address.city,
-            country: Faker::Address.country
-          }
+          profile: build(:profile, country: 'BR', user: user)
         }, as: :json
       }.to change(Profile, :count).by(1)
 
@@ -65,7 +59,7 @@ RSpec.describe "Profiles", type: :request do
   end
 
   describe "PATCH /users/:user_username/profile" do
-    let(:profile) { create(:profile, user: user) }
+    let(:profile) { create(:profile, country: 'BR', user: user) }
 
     it "updates the profile" do
       patch user_profile_url(user.username), headers: headers, params: {
