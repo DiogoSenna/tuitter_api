@@ -5,7 +5,13 @@ class User < ApplicationRecord
   validates :password,
             length: { minimum: 8, maximum: 128 },
             password: true,
-            allow_nil: true, on: :update
+            if: :password_required?
 
   has_one :profile
+
+  private
+
+  def password_required?
+    new_record? || password.present?
+  end
 end
