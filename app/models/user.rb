@@ -8,6 +8,7 @@ class User < ApplicationRecord
             if: :password_required?
 
   has_one :profile
+  has_and_belongs_to_many :roles
 
   private
 
