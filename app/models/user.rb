@@ -10,6 +10,10 @@ class User < ApplicationRecord
   has_one :profile
   has_and_belongs_to_many :roles
 
+  def admin?
+    roles.include?(Role.find_by!(name: Role::DEFAULT[:admin]))
+  end
+
   private
 
   def password_required?
