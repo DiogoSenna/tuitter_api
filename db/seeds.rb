@@ -14,8 +14,8 @@ end
 
 admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
   user.username = 'user_admin'
-  user.password = "aAbB12!@"
-  user.password_confirmation = "aAbB12!@"
+  user.password = Rails.application.credentials.admin_password.to_s
+  user.password_confirmation = Rails.application.credentials.admin_password.to_s
 end
 
 admin_role = Role.find_by!(name: Role::DEFAULT[:admin])
