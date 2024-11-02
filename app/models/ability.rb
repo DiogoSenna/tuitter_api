@@ -4,12 +4,13 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
-    can :show, User do |user|
-      ! user.profile&.is_private
-    end
+    can :create, User
 
     return unless user.present?
-    can :read, :all
+    can :read, User
+    can %i[update destroy], User, id: user.id
+    can :show, Profile, is_private: false
+    can :manage, Profile, user_id: user.id
 
     return unless user.admin?
     can :manage, :all
