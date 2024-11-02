@@ -7,6 +7,10 @@ class ApplicationController < ActionController::API
     render json: { error: 'Unauthorized' }, status: :unauthorized
   end
 
+  def unprocessable_entity(errors=nil)
+    render json: errors || 'Unprocessable entity', status: :unprocessable_entity
+  end
+
   def home
     render json: { message: 'Tuitter API', version: '0.1.0' }
   end

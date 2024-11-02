@@ -6,16 +6,12 @@ class AuthenticationController < ApplicationController
                 .or(User.where(email: params[:email]))
                 .first
 
-    if @user&.authenticate(params[:password])
-      token = JsonWebToken.encode(user_id: @user.id)
+    return unauthorized unless @user&.authenticate(params[:password])
 
-      render json: {
-        token: token,
-        user: @user.as_json(except: [:id, :password_digest]),
-      }
-    else
-      render json: { error: 'Unauthorized' }, status: :unauthorized
-    end
+    render json: {
+      token: JsonWebToken.encode(user_id: @user.id),
+      user: @user.as_json(except: [:id, :password_digest]),
+    }
   end
 
   def logout
@@ -32,7 +28,7 @@ class AuthenticationController < ApplicationController
   def change_password
     return head :no_content if @current_user.update(password_params)
 
-    render json: { errors: @current_user.errors.full_messages }, status: :unprocessable_entity
+    unprocessable_entity(@current_user.errors.full_messages)
   end
 
   private
