@@ -10,7 +10,8 @@ Rails.application.routes.draw do
     resource :profile, only: %i[show create update]
   end
 
-  resources :roles, only: %i[index show]
+  resources :permissions, only: %i[index show]
+  resources :roles
 
   resources :countries, param: :code, only: %i[index show]
   get 'countries/:code/subdivisions', to: 'countries#subdivisions', as: 'country_subdivisions'
