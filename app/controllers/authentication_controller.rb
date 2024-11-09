@@ -19,10 +19,12 @@ class AuthenticationController < ApplicationController
     exp = Time.at(@decoded_token[:exp]).to_datetime
 
     BlacklistedToken.create!(jti: jti, exp: exp)
+
+    head :no_content
   end
 
   def me
-    @current_user
+    render json: @current_user
   end
 
   def change_password
