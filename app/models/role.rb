@@ -1,11 +1,8 @@
 class Role < ApplicationRecord
   has_and_belongs_to_many :users
+  has_and_belongs_to_many :permissions
 
-  DEFAULT = {
-    admin: "administrator",
-    user: "regular_user",
-    premium: "premium_user",
-    company: "company",
-  }
-
+  def has_permission?(permission)
+    permissions.include?(permission)
+  end
 end
