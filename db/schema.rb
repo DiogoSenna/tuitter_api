@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_31_031622) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_03_215952) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,6 +20,25 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_31_031622) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["jti"], name: "index_blacklisted_tokens_on_jti", unique: true
+  end
+
+  create_table "permissions", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_permissions_on_name", unique: true
+  end
+
+  create_table "permissions_roles", id: false, force: :cascade do |t|
+    t.bigint "permission_id", null: false
+    t.bigint "role_id", null: false
+    t.index ["permission_id", "role_id"], name: "index_permissions_roles_on_permission_id_and_role_id", unique: true
+  end
+
+  create_table "permissions_users", id: false, force: :cascade do |t|
+    t.bigint "permission_id", null: false
+    t.bigint "user_id", null: false
+    t.index ["permission_id", "user_id"], name: "index_permissions_users_on_permission_id_and_user_id", unique: true
   end
 
   create_table "profiles", force: :cascade do |t|
@@ -58,5 +77,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_31_031622) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  add_foreign_key "permissions_roles", "permissions"
+  add_foreign_key "permissions_roles", "roles"
+  add_foreign_key "permissions_users", "permissions"
+  add_foreign_key "permissions_users", "users"
   add_foreign_key "profiles", "users"
 end
