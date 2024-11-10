@@ -13,7 +13,7 @@ class UsersController < ApplicationController
   end
 
   def create
-    user = User.new(new_user_params)
+    user = User.new(user_params)
 
     return unprocessable_entity(user.errors) unless user.save
 
@@ -35,11 +35,10 @@ class UsersController < ApplicationController
       @user = User.find_by!(username: params[:username])
     end
 
-    def new_user_params
-      params.require(:user).permit(:username, :email, :password, :password_confirmation)
-    end
-
     def user_params
-      params.require(:user).permit(:username, :email)
+      allowed = %i[username email]
+      allowed += %i[password password_confirmation] if action_name === 'create'
+
+      params.require(:user).permit(*allowed)
     end
 end
