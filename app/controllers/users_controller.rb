@@ -1,6 +1,8 @@
 class UsersController < ApplicationController
   before_action :authorize_request, except: :create
   before_action :set_user, only: %i[ show update destroy ]
+  include Authorizable
+  authorize_actions only: %i[ update destroy ]
 
   def index
     @users = User.all

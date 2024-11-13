@@ -1,7 +1,6 @@
 class RolesController < ApplicationController
   before_action :authorize_request
   before_action :set_role, only: :show
-
   include Authorizable
   authorize_actions
 
