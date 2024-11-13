@@ -6,6 +6,7 @@ FactoryBot.define do
     country { Faker::Address.country_code }
     state { generate_state_for(country) }
     city { Faker::Address.city }
+    is_private { Faker::Boolean.boolean }
     association :user
   end
 end

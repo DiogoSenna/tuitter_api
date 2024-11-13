@@ -1,6 +1,8 @@
 class UsersController < ApplicationController
   before_action :authorize_request, except: :create
   before_action :set_user, only: %i[ show update destroy ]
+  include Authorizable
+  authorize_actions only: %i[ update destroy ]
 
   def index
     @users = User.all
@@ -13,21 +15,17 @@ class UsersController < ApplicationController
   end
 
   def create
-    user = User.new(new_user_params)
+    user = User.new(user_params)
 
-    if user.save
-      render json: user, status: :created, location: user
-    else
-      render json: user.errors, status: :unprocessable_entity
-    end
+    return unprocessable_entity(user.errors) unless user.save
+
+    render json: user, status: :created, location: user
   end
 
   def update
-    if @user.update(user_params)
-      render json: @user
-    else
-      render json: @user.errors, status: :unprocessable_entity
-    end
+    return unprocessable_entity(@user.errors) unless @user.update(user_params)
+
+    render json: @user
   end
 
   def destroy
@@ -39,11 +37,10 @@ class UsersController < ApplicationController
       @user = User.find_by!(username: params[:username])
     end
 
-    def new_user_params
-      params.require(:user).permit(:username, :email, :password, :password_confirmation)
-    end
-
     def user_params
-      params.require(:user).permit(:username, :email)
+      allowed = %i[username email]
+      allowed += %i[password password_confirmation] if action_name === 'create'
+
+      params.require(:user).permit(*allowed)
     end
 end
