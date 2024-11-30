@@ -1,6 +1,9 @@
 class TueetsController < ApplicationController
+  before_action :authorize_request, only: %i[ create update destroy ]
   before_action :set_user
   before_action :set_tueet, only: %i[ show update destroy ]
+  include Authorizable
+  authorize_actions only: %i[ update destroy ]
 
   def index
     @tueets = @user.tueets.all
@@ -13,7 +16,7 @@ class TueetsController < ApplicationController
   end
 
   def create
-    @tueet = @user.build_tueet(tueet_params)
+    @tueet = @user.tueets.build(tueet_params)
 
     return unprocessable_entity(@tueet.errors) unless @tueet.save
 
@@ -40,6 +43,9 @@ class TueetsController < ApplicationController
     end
 
     def tueet_params
-      params.require(:tueet).permit(:content, :user_id)
+      allowed = %i[content]
+      allowed << :parent_id if action_name === 'create'
+
+      params.require(:tueet).permit(*allowed)
     end
 end
