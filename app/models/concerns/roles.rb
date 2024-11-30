@@ -12,7 +12,7 @@ module Roles
     when REGULAR_USER
       Permissions::PROFILES
     when PREMIUM_USER
-      Permissions::PROFILES + Permissions::USERS
+      Permissions::PROFILES + Permissions::TUEETS.take(1)
     else
       []
     end
