@@ -27,6 +27,18 @@ class User < ApplicationRecord
     not can?(*abilities)
   end
 
+  def has_role?(role_name)
+    roles.pluck(:name).include?(role_name)
+  end
+
+  def admin?
+    has_role?(Roles::ADMIN.to_s)
+  end
+
+  def premium?
+    has_role?(Roles::PREMIUM_USER.to_s)
+  end
+
   private
 
   def password_required?
