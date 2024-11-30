@@ -10,6 +10,7 @@ class User < ApplicationRecord
   has_one :profile
   has_and_belongs_to_many :roles
   has_and_belongs_to_many :permissions
+  has_many :tueets, dependent: :destroy
 
   def can?(*abilities)
     user_permissions = permissions + roles.flat_map(&:permissions)

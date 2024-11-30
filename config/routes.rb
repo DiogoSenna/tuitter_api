@@ -8,6 +8,7 @@ Rails.application.routes.draw do
 
   resources :users, param: :username, constraints: { username: /.+/ } do
     resource :profile, only: %i[show create update]
+    resources :tueets
   end
 
   resources :permissions, only: %i[index show]
