@@ -20,7 +20,7 @@ class TueetsController < ApplicationController
 
     return unprocessable_entity(@tueet.errors) unless @tueet.save
 
-    render json: @tueet, status: :created, location: @tueet
+    render json: @tueet, status: :created
   end
 
   def update
