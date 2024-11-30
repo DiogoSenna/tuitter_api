@@ -4,6 +4,6 @@ class UsersPolicy < ApplicationPolicy
   end
 
   def destroy?
-    user.can?(:users_destroy) || record.id === user.id
+    user.can?(:users_delete) || record.id === user.id
   end
 end
