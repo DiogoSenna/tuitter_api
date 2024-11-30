@@ -2,7 +2,7 @@ module Permissions
   USERS = %i[users_update users_delete].freeze
   PROFILES = %i[profiles_show profiles_update].freeze
   ROLES = %i[roles_index roles_show roles_create roles_update roles_delete].freeze
-  TUEETS = %i[tueets_update tueets_delete].freeze
+  TUEETS = %i[tueets_update].freeze
 
   ALL = USERS + PROFILES + ROLES + TUEETS
 
